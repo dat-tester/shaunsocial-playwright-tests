@@ -1,0 +1,30 @@
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Screenshots & temp files
+*.png
+*.jpg
+*.jpeg
+ss-*.png
+tc-*.png
+check-*.png
+feed-*.png
+
+# Helper/debug scripts (root level)
+screenshot-*.js
+check-*.js
+create-test-*.js
+create-test-video.js
+
+# Misc
+.claude/
+.playwright-mcp/
+*.xlsx
+*.py
+download.jpg
