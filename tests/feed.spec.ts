@@ -65,8 +65,8 @@ test.describe('Home Feed', () => {
     await expect(likeCountBtn).toHaveText('0 likes');
   });
 
-  // TC-FEED-006
-  test('TC-FEED-006: Can open comment section and submit a comment on a post', async ({ page }) => {
+  // TC-FEED-005
+  test('TC-FEED-005: Can open comment section and submit a comment on a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -103,8 +103,8 @@ test.describe('Home Feed', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-FEED-008
-  test('TC-FEED-008: Can click Share button on a post', async ({ page }) => {
+  // TC-FEED-006
+  test('TC-FEED-006: Can click Share button on a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -129,8 +129,8 @@ test.describe('Home Feed', () => {
     }
   });
 
-  // TC-FEED-009
-  test('TC-FEED-009: Can bookmark and remove bookmark from a post', async ({ page }) => {
+  // TC-FEED-007
+  test('TC-FEED-007: Can bookmark and remove bookmark from a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 
@@ -184,8 +184,8 @@ test.describe('Home Feed', () => {
 test.describe('Create Post', () => {
 
 
-  // TC-POST-002
-  test('TC-POST-002: Can submit a text post', async ({ page }) => {
+  // TC-POST-001
+  test('TC-POST-001: Can submit a text post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await home.postComposerTrigger.click();
@@ -204,8 +204,8 @@ test.describe('Create Post', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-POST-009
-  test('TC-POST-009: Can post a text then delete it', async ({ page }) => {
+  // TC-POST-002
+  test('TC-POST-002: Can post a text then delete it', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await home.postComposerTrigger.click();
@@ -249,8 +249,8 @@ test.describe('Create Post', () => {
     await expect(page.locator('.feed-item').filter({ hasText: postText })).toHaveCount(0);
   });
 
-  // TC-POST-004
-  test('TC-POST-004: Can post a video with text', async ({ page }) => {
+  // TC-POST-003
+  test('TC-POST-003: Can post a video with text', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 
@@ -284,8 +284,8 @@ test.describe('Create Post', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-POST-005
-  test('TC-POST-005: Can post a Vibb (short video/reel)', async ({ page }) => {
+  // TC-POST-004
+  test('TC-POST-004: Can post a Vibb (short video/reel)', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 
@@ -324,8 +324,8 @@ test.describe('Create Post', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-POST-006
-  test('TC-POST-006: Can delete a post', async ({ page }) => {
+  // TC-POST-005
+  test('TC-POST-005: Can delete a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -360,8 +360,8 @@ test.describe('Create Post', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-POST-008
-  test('TC-POST-008: Can post a photo with text', async ({ page }) => {
+  // TC-POST-006
+  test('TC-POST-006: Can post a photo with text', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 
