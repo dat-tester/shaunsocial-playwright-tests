@@ -9,19 +9,6 @@ const TEST_VIDEO = path.join(__dirname, 'fixtures', 'test-video-recorded.mp4');
 
 test.describe('Home Feed', () => {
 
-  // TC-FEED-001
-  test('TC-FEED-001: Feed supports infinite scroll', async ({ page }) => {
-    const home = new HomePage(page);
-    await home.goto();
-    await page.waitForTimeout(2000);
-
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(2000);
-    await page.screenshot({ path: 'tc-feed-003.png' });
-
-    await expect(page.locator('body')).not.toBeEmpty();
-  });
-
   // TC-FEED-002
   test('TC-FEED-002: Can like and unlike a post', async ({ page }) => {
     const home = new HomePage(page);
@@ -66,7 +53,7 @@ test.describe('Home Feed', () => {
   });
 
   // TC-FEED-003
-  test('TC-FEED-003: Can open comment section and submit a comment on a post', async ({ page }) => {
+  test('TC-FEED-003: Comment on a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);

@@ -1,17 +1,18 @@
 import { test as setup, expect } from '@playwright/test';
 import path from 'path';
+import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from '../site.config';
 
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
-const USER_EMAIL = 'testuser_pw@test.com';
-const USER_PASSWORD = 'Test@12345';
+const USER_EMAIL = TEST_USER_EMAIL;
+const USER_PASSWORD = TEST_USER_PASSWORD;
 
 setup('authenticate as test user', async ({ page }) => {
   await page.goto('./');
   await page.waitForLoadState('domcontentloaded');
 
   // Fill credentials using real accessible names from the DOM
-  await page.getByRole('textbox', { name: 'Email or username' }).fill(USER_EMAIL);
+  await page.getByRole('textbox').first().fill(USER_EMAIL);
   await page.getByRole('textbox', { name: 'Password' }).fill(USER_PASSWORD);
   await page.getByRole('button', { name: 'Login' }).click();
 

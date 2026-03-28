@@ -1,20 +1,21 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { RegisterPage } from '../pages/RegisterPage';
+import { TEST_USER_EMAIL, TEST_USER_USERNAME, TEST_USER_PASSWORD, ADMIN_EMAIL, ADMIN_PASSWORD } from '../site.config';
 
 // Auth tests run without stored session
 test.use({ storageState: { cookies: [], origins: [] } });
 
-const VALID_EMAIL    = 'testuser_pw@test.com';
-const VALID_USERNAME = 'testuser_pw2026';
-const VALID_PASSWORD = 'Test@12345';
+const VALID_EMAIL    = TEST_USER_EMAIL;
+const VALID_USERNAME = TEST_USER_USERNAME;
+const VALID_PASSWORD = TEST_USER_PASSWORD;
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 
 test.describe('Login', () => {
 
   // TC-AUTH-001
-  test('TC-AUTH-001: Login page displays correctly when unauthenticated', async ({ page }) => {
+  test('TC-AUTH-001: Verify login page', async ({ page }) => {
     const login = new LoginPage(page);
     await login.goto();
     await page.screenshot({ path: 'tc-auth-001.png' });
@@ -26,7 +27,7 @@ test.describe('Login', () => {
   });
 
   // TC-AUTH-002
-  test('TC-AUTH-002: Login with valid email and password', async ({ page }) => {
+  test('TC-AUTH-002: User login with valid email and password', async ({ page }) => {
     const login = new LoginPage(page);
     await login.login(VALID_EMAIL, VALID_PASSWORD);
     await page.waitForTimeout(2000);
@@ -37,7 +38,7 @@ test.describe('Login', () => {
   });
 
   // TC-AUTH-003
-  test('TC-AUTH-003: Login with valid username (not email)', async ({ page }) => {
+  test('TC-AUTH-003: User login with valid username (not email)', async ({ page }) => {
     const login = new LoginPage(page);
     await login.login(VALID_USERNAME, VALID_PASSWORD);
     await page.waitForTimeout(2000);
@@ -100,7 +101,7 @@ test.describe('Login', () => {
   });
 
   // TC-AUTH-008
-  test('TC-AUTH-008: Forgot password link is visible on login page', async ({ page }) => {
+  test('TC-AUTH-008: Forgot password can click', async ({ page }) => {
     const login = new LoginPage(page);
     await login.goto();
     await page.screenshot({ path: 'tc-auth-008.png' });
@@ -113,7 +114,7 @@ test.describe('Login', () => {
 test.describe('Registration', () => {
 
   // TC-REG-001
-  test('TC-REG-001: Registration form is accessible at /signup', async ({ page }) => {
+  test('TC-REG-001: Verify Sign-up link is active', async ({ page }) => {
     const register = new RegisterPage(page);
     await register.goto();
     await page.screenshot({ path: 'tc-reg-001.png' });
@@ -122,7 +123,7 @@ test.describe('Registration', () => {
   });
 
   // TC-REG-002
-  test('TC-REG-002: Registration form has all required fields', async ({ page }) => {
+  test('TC-REG-002: Verify Sign-up Page', async ({ page }) => {
     const register = new RegisterPage(page);
     await register.goto();
     await page.screenshot({ path: 'tc-reg-002.png' });
@@ -140,7 +141,7 @@ test.describe('Registration', () => {
 
     const register = new RegisterPage(page);
     await register.goto();
-    await register.fullNameInput.fill('New User Test');
+    await register.fullNameInput.fill(`New User ${ts}`);
     await register.usernameInput.fill(username);
     await register.emailInput.fill(email);
     await register.passwordInput.fill(VALID_PASSWORD);
@@ -185,6 +186,71 @@ test.describe('Registration', () => {
     const hasError      = await page.locator('[class*="error"], [class*="alert"], [class*="invalid"]').first().isVisible().catch(() => false);
     const stillOnSignup = page.url().includes('/signup');
     expect(hasError || stillOnSignup).toBeTruthy();
+  });
+});
+
+// ─── Admin Login ──────────────────────────────────────────────────────────────
+
+test.describe('Admin Login', () => {
+
+  // TC-ADMIN-001
+  test('TC-ADMIN-001: Admin login with valid email and password', async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.login(ADMIN_EMAIL, ADMIN_PASSWORD);
+    await page.waitForLoadState('domcontentloaded');
+    await page.screenshot({ path: 'tc-admin-001.png' });
+
+    const addNew = page.getByRole('button', { name: 'Add New' }).first();
+    await expect(addNew).toBeVisible({ timeout: 10000 });
+  });
+
+  // TC-ADMIN-002
+  test('TC-ADMIN-002: Admin login with invalid password', async ({ page }) => {
+    const login = new LoginPage(page);
+    await login.goto();
+    await login.emailOrUsernameInput.fill(ADMIN_EMAIL);
+    await login.passwordInput.fill('WrongPassword999!');
+    await login.loginButton.click();
+    await page.waitForLoadState('domcontentloaded');
+    await page.screenshot({ path: 'tc-admin-002.png' });
+
+    const addNew = await page.getByRole('button', { name: 'Add New' }).first().isVisible({ timeout: 3000 }).catch(() => false);
+    expect(addNew).toBeFalsy();
+  });
+
+  // TC-ADMIN-003
+  test('TC-ADMIN-003: Admin can access admin panel after login', async ({ page, context }) => {
+    // Step 1: Login with admin account on main site
+    const login = new LoginPage(page);
+    await login.login(ADMIN_EMAIL, ADMIN_PASSWORD);
+    await page.waitForLoadState('domcontentloaded');
+
+    // Step 2: Dismiss notification popup if present
+    const cancelBtn = page.getByRole('button', { name: 'Cancel' });
+    if (await cancelBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cancelBtn.click();
+    }
+
+    // Step 3: Click "Go to admin panel" — opens in new tab
+    const adminPanelLink = page.getByRole('link', { name: 'Go to admin panel' });
+    await expect(adminPanelLink).toBeVisible({ timeout: 10000 });
+
+    const [adminPage] = await Promise.all([
+      context.waitForEvent('page'),
+      adminPanelLink.click(),
+    ]);
+    await adminPage.waitForLoadState('domcontentloaded');
+    await expect(adminPage).toHaveURL(/\/admin\/login/);
+
+    // Step 4: Enter admin credentials on admin login page
+    await adminPage.getByRole('textbox', { name: 'Email' }).fill(ADMIN_EMAIL);
+    await adminPage.getByRole('textbox', { name: 'Password' }).fill(ADMIN_PASSWORD);
+    await adminPage.getByRole('button', { name: 'Login' }).click();
+
+    // Step 5: Verify redirect to admin dashboard
+    await adminPage.waitForLoadState('domcontentloaded');
+    await adminPage.screenshot({ path: 'tc-admin-003.png' });
+    await expect(adminPage).toHaveURL(/\/admin\/dashboard/);
   });
 });
 
