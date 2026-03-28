@@ -9,8 +9,8 @@ const TEST_VIDEO = path.join(__dirname, 'fixtures', 'test-video-recorded.mp4');
 
 test.describe('Home Feed', () => {
 
-  // TC-FEED-003
-  test('TC-FEED-003: Feed supports infinite scroll', async ({ page }) => {
+  // TC-FEED-001
+  test('TC-FEED-001: Feed supports infinite scroll', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -22,8 +22,8 @@ test.describe('Home Feed', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-FEED-004
-  test('TC-FEED-004: Can like and unlike a post', async ({ page }) => {
+  // TC-FEED-002
+  test('TC-FEED-002: Can like and unlike a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 
@@ -65,8 +65,8 @@ test.describe('Home Feed', () => {
     await expect(likeCountBtn).toHaveText('0 likes');
   });
 
-  // TC-FEED-005
-  test('TC-FEED-005: Can open comment section and submit a comment on a post', async ({ page }) => {
+  // TC-FEED-003
+  test('TC-FEED-003: Can open comment section and submit a comment on a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -103,8 +103,8 @@ test.describe('Home Feed', () => {
     await expect(page.locator('body')).not.toBeEmpty();
   });
 
-  // TC-FEED-006
-  test('TC-FEED-006: Can click Share button on a post', async ({ page }) => {
+  // TC-FEED-004
+  test('TC-FEED-004: Can click Share button on a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(2000);
@@ -129,8 +129,8 @@ test.describe('Home Feed', () => {
     }
   });
 
-  // TC-FEED-007
-  test('TC-FEED-007: Can bookmark and remove bookmark from a post', async ({ page }) => {
+  // TC-FEED-005
+  test('TC-FEED-005: Can bookmark and remove bookmark from a post', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
 

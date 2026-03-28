@@ -5,24 +5,24 @@ import { HomePage } from '../pages/HomePage';
 
 test.describe('Login', () => {
 
-  // TC-FEED-001
-  test('TC-FEED-001: Home feed loads after login', async ({ page }) => {
+  // TC-LOGIN-001
+  test('TC-LOGIN-001: Home feed loads after login', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(3000);
-    await page.screenshot({ path: 'tc-feed-001.png' });
+    await page.screenshot({ path: 'tc-login-001.png' });
 
     await expect(home.postComposerTrigger).toBeVisible({ timeout: 10000 });
     const sidebar = page.locator('nav, [role="navigation"], ul').first();
     await expect(sidebar).toBeVisible();
   });
 
-  // TC-FEED-002
-  test('TC-FEED-002: Feed displays posts with author and engagement buttons', async ({ page }) => {
+  // TC-LOGIN-002
+  test('TC-LOGIN-002: Feed displays posts with author and engagement buttons', async ({ page }) => {
     const home = new HomePage(page);
     await home.goto();
     await page.waitForTimeout(3000);
-    await page.screenshot({ path: 'tc-feed-002.png' });
+    await page.screenshot({ path: 'tc-login-002.png' });
 
     // Author username link
     const authorLink = page.locator('a[href*="@"]').first();
